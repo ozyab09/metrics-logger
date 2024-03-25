@@ -1,9 +1,9 @@
-package go_metrics_logger
+package logger
 
 import "context"
 
 type (
-	messageExecutor interface {
+	MessageExecutor interface {
 		ExecuteMessage(level string, text string)
 	}
 
@@ -20,7 +20,7 @@ type (
 	}
 )
 
-func newMessageExecutorImpl(ctx context.Context, logger Logger, workersNum uint32, bufferSize uint32) *messageExecutorImpl {
+func NewMessageExecutorImpl(ctx context.Context, logger Logger, workersNum uint32, bufferSize uint32) MessageExecutor {
 	exec := &messageExecutorImpl{
 		ctx:        ctx,
 		logger:     logger,

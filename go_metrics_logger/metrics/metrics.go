@@ -1,14 +1,15 @@
-package go_metrics_logger
+package metrics
 
 import (
+	"github.com/ozyab09/metrics-logger/go_metrics_logger/logger"
 	"time"
 
 	"github.com/prometheus/client_golang/prometheus"
 )
 
 type Metrics interface {
-	IncOp(opName string, componentName string, status Status)
-	Observe(opName string, componentName string, status Status, d time.Duration)
+	IncOp(opName string, componentName string, status logger.Status)
+	Observe(opName string, componentName string, status logger.Status, d time.Duration)
 	Close()
 }
 
@@ -37,13 +38,13 @@ func NewMetrics() Metrics {
 	return &metricsImpl{opCount: opCount, opLatency: opLatency}
 }
 
-func (i *metricsImpl) IncOp(opName string, componentName string, status Status) {
+func (i *metricsImpl) IncOp(opName string, componentName string, status logger.Status) {
 	i.opCount.WithLabelValues(
 		opName, componentName, string(status),
 	).Inc()
 }
 
-func (i *metricsImpl) Observe(opName string, componentName string, status Status, d time.Duration) {
+func (i *metricsImpl) Observe(opName string, componentName string, status logger.Status, d time.Duration) {
 	i.opLatency.
 		WithLabelValues(opName, componentName, string(status)).
 		Observe(d.Seconds())

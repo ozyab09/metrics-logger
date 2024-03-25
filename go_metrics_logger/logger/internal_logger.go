@@ -1,7 +1,7 @@
-package go_metrics_logger
+package logger
 
 import (
-	"fmt"
+	"log"
 	"sync"
 )
 
@@ -20,5 +20,5 @@ func NewDefaultLogger() Logger {
 func (d *DefaultLogger) Log(level string, message string) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	fmt.Printf("[%s] %s", level, message)
+	log.Printf("[%s] %s", level, message)
 }

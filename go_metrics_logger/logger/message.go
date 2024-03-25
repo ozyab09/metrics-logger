@@ -1,4 +1,4 @@
-package go_metrics_logger
+package logger
 
 import "time"
 

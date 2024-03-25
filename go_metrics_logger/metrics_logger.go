@@ -3,6 +3,9 @@ package go_metrics_logger
 import (
 	"context"
 	"encoding/json"
+
+	"github.com/ozyab09/metrics-logger/go_metrics_logger/logger"
+	"github.com/ozyab09/metrics-logger/go_metrics_logger/metrics"
 )
 
 const (
@@ -20,32 +23,32 @@ const (
 
 type (
 	MetricsLogger interface {
-		Debug(ctx context.Context, message Message)
-		Info(ctx context.Context, message Message)
-		Warn(ctx context.Context, message Message)
-		Error(ctx context.Context, message Message)
-		Fatal(ctx context.Context, message Message)
+		Debug(ctx context.Context, message logger.Message)
+		Info(ctx context.Context, message logger.Message)
+		Warn(ctx context.Context, message logger.Message)
+		Error(ctx context.Context, message logger.Message)
+		Fatal(ctx context.Context, message logger.Message)
 		Close()
 	}
 
 	metricsLoggerImpl struct {
-		exec messageExecutor
-		m    Metrics
+		exec logger.MessageExecutor
+		m    metrics.Metrics
 	}
 )
 
-func NewMetricsLogger(ctx context.Context, logger Logger, metricsPath string, metricsPort string) MetricsLogger {
-	if logger == nil {
-		logger = NewDefaultLogger()
+func NewMetricsLogger(ctx context.Context, lg logger.Logger, metricsPath string, metricsPort string) MetricsLogger {
+	if lg == nil {
+		lg = logger.NewDefaultLogger()
 	}
 
 	return &metricsLoggerImpl{
-		exec: newMessageExecutorImpl(ctx, logger, loggerWorkersNum, loggerBufferSize),
-		m:    newMetricsPublisher(metricsPath, metricsPort),
+		exec: logger.NewMessageExecutorImpl(ctx, lg, loggerWorkersNum, loggerBufferSize),
+		m:    metrics.NewMetricsPublisher(metricsPath, metricsPort),
 	}
 }
 
-func (i *metricsLoggerImpl) Debug(_ context.Context, message Message) {
+func (i *metricsLoggerImpl) Debug(_ context.Context, message logger.Message) {
 	data, err := json.Marshal(message)
 	if err == nil {
 		i.exec.ExecuteMessage(DebugLevel, string(data))
@@ -53,7 +56,7 @@ func (i *metricsLoggerImpl) Debug(_ context.Context, message Message) {
 	i.generateMetrics(message)
 }
 
-func (i *metricsLoggerImpl) Info(_ context.Context, message Message) {
+func (i *metricsLoggerImpl) Info(_ context.Context, message logger.Message) {
 	data, err := json.Marshal(message)
 	if err == nil {
 		i.exec.ExecuteMessage(InfoLevel, string(data))
@@ -61,7 +64,7 @@ func (i *metricsLoggerImpl) Info(_ context.Context, message Message) {
 	i.generateMetrics(message)
 }
 
-func (i *metricsLoggerImpl) Warn(_ context.Context, message Message) {
+func (i *metricsLoggerImpl) Warn(_ context.Context, message logger.Message) {
 	data, err := json.Marshal(message)
 	if err == nil {
 		i.exec.ExecuteMessage(WarnLevel, string(data))
@@ -69,7 +72,7 @@ func (i *metricsLoggerImpl) Warn(_ context.Context, message Message) {
 	i.generateMetrics(message)
 }
 
-func (i *metricsLoggerImpl) Error(_ context.Context, message Message) {
+func (i *metricsLoggerImpl) Error(_ context.Context, message logger.Message) {
 	data, err := json.Marshal(message)
 	if err == nil {
 		i.exec.ExecuteMessage(ErrorLevel, string(data))
@@ -77,7 +80,7 @@ func (i *metricsLoggerImpl) Error(_ context.Context, message Message) {
 	i.generateMetrics(message)
 }
 
-func (i *metricsLoggerImpl) Fatal(_ context.Context, message Message) {
+func (i *metricsLoggerImpl) Fatal(_ context.Context, message logger.Message) {
 	data, err := json.Marshal(message)
 	if err == nil {
 		i.exec.ExecuteMessage(FatalLevel, string(data))
@@ -85,7 +88,7 @@ func (i *metricsLoggerImpl) Fatal(_ context.Context, message Message) {
 	i.generateMetrics(message)
 }
 
-func (i *metricsLoggerImpl) generateMetrics(message Message) {
+func (i *metricsLoggerImpl) generateMetrics(message logger.Message) {
 	i.m.IncOp(message.OperationName, message.ComponentName, message.EventStatus)
 	i.m.Observe(message.OperationName, message.ComponentName, message.EventStatus, message.Latency)
 }
