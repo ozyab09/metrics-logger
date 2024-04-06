@@ -111,7 +111,6 @@ namespace MetricsLogger {
     void BaseLogger::LogInFile(const LogLevel& logLevel, const std::string& message, const std::string& filePath, const std::map<std::string, std::any>& otherFields) {
         if (logLevel > Level) {
             Executor.AddMessageSending([=]() {
-
                 std::ofstream out;
                 out.open(filePath);
                 out << GetDefaultLogString(logLevel, message, otherFields) << std::endl;
