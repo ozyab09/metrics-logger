@@ -3,8 +3,11 @@ package logger
 import "context"
 
 type (
+	// MessageExecutor - message executor interface
 	MessageExecutor interface {
+		// ExecuteMessage - process message
 		ExecuteMessage(level string, text string)
+		// Close - close executor
 		Close() error
 	}
 
@@ -21,6 +24,7 @@ type (
 	}
 )
 
+// NewMessageExecutorImpl - return new message executor
 func NewMessageExecutorImpl(ctx context.Context, logger Logger, workersNum uint32, bufferSize uint32) MessageExecutor {
 	exec := &messageExecutorImpl{
 		ctx:        ctx,
@@ -48,10 +52,12 @@ func (i *messageExecutorImpl) init() {
 	}
 }
 
+// ExecuteMessage - process message
 func (i *messageExecutorImpl) ExecuteMessage(level string, text string) {
 	i.messages <- logEvent{level: level, text: text}
 }
 
+// Close - close executor
 func (i *messageExecutorImpl) Close() error {
 	return i.logger.Close()
 }

@@ -6,11 +6,13 @@ import (
 	"sync"
 )
 
+// FileLogger - log messages into file
 type FileLogger struct {
 	mu sync.Mutex
 	f  *os.File
 }
 
+// NewFileLogger - return new file logger implementation
 func NewFileLogger(fileName string) (Logger, error) {
 	file, err := os.OpenFile(fileName, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
 	if err != nil {
@@ -19,6 +21,7 @@ func NewFileLogger(fileName string) (Logger, error) {
 	return &FileLogger{f: file}, nil
 }
 
+// Log - message logging
 func (d *FileLogger) Log(level string, message string) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
@@ -28,6 +31,7 @@ func (d *FileLogger) Log(level string, message string) {
 	}
 }
 
+// Close - close logger
 func (d *FileLogger) Close() error {
 	return d.f.Close()
 }

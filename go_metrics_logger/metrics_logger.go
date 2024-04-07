@@ -3,6 +3,7 @@ package go_metrics_logger
 import (
 	"context"
 	"encoding/json"
+	"time"
 
 	"github.com/ozyab09/metrics-logger/go_metrics_logger/logger"
 	"github.com/ozyab09/metrics-logger/go_metrics_logger/metrics"
@@ -14,20 +15,32 @@ const (
 )
 
 const (
+	// DebugLevel - debug logging level
 	DebugLevel = "DEBUG"
-	InfoLevel  = "INFO"
-	WarnLevel  = "WARN"
+	// InfoLevel - info logging level
+	InfoLevel = "INFO"
+	// WarnLevel - warn logging level
+	WarnLevel = "WARN"
+	// ErrorLevel - error logging level
 	ErrorLevel = "ERROR"
+	// FatalLevel - fatal logging level
 	FatalLevel = "FATAL"
 )
 
 type (
+	// MetricsLogger - logging messages and generate metrics interface
 	MetricsLogger interface {
+		// Debug - log message with level debug and generate metrics
 		Debug(ctx context.Context, message logger.Message)
+		// Info - log message with level info and generate metrics
 		Info(ctx context.Context, message logger.Message)
+		// Warn - log message with level warn and generate metrics
 		Warn(ctx context.Context, message logger.Message)
+		// Error - log message with level error and generate metrics
 		Error(ctx context.Context, message logger.Message)
+		// Fatal - log message with level fatal and generate metrics
 		Fatal(ctx context.Context, message logger.Message)
+		// Close - close metrics logger
 		Close() error
 	}
 
@@ -37,6 +50,7 @@ type (
 	}
 )
 
+// NewMetricsLogger - return new metrics-logger implementation
 func NewMetricsLogger(ctx context.Context, lg logger.Logger, metricsPath string, metricsPort string) MetricsLogger {
 	if lg == nil {
 		lg = logger.NewDefaultLogger()
@@ -48,6 +62,7 @@ func NewMetricsLogger(ctx context.Context, lg logger.Logger, metricsPath string,
 	}
 }
 
+// Debug - log message with level debug and generate metrics
 func (i *metricsLoggerImpl) Debug(_ context.Context, message logger.Message) {
 	data, err := json.Marshal(message)
 	if err == nil {
@@ -56,6 +71,7 @@ func (i *metricsLoggerImpl) Debug(_ context.Context, message logger.Message) {
 	i.generateMetrics(message)
 }
 
+// Info - log message with level info and generate metrics
 func (i *metricsLoggerImpl) Info(_ context.Context, message logger.Message) {
 	data, err := json.Marshal(message)
 	if err == nil {
@@ -64,6 +80,7 @@ func (i *metricsLoggerImpl) Info(_ context.Context, message logger.Message) {
 	i.generateMetrics(message)
 }
 
+// Warn - log message with level warn and generate metrics
 func (i *metricsLoggerImpl) Warn(_ context.Context, message logger.Message) {
 	data, err := json.Marshal(message)
 	if err == nil {
@@ -72,6 +89,7 @@ func (i *metricsLoggerImpl) Warn(_ context.Context, message logger.Message) {
 	i.generateMetrics(message)
 }
 
+// Error - log message with level error and generate metrics
 func (i *metricsLoggerImpl) Error(_ context.Context, message logger.Message) {
 	data, err := json.Marshal(message)
 	if err == nil {
@@ -80,6 +98,7 @@ func (i *metricsLoggerImpl) Error(_ context.Context, message logger.Message) {
 	i.generateMetrics(message)
 }
 
+// Fatal - log message with level fatal and generate metrics
 func (i *metricsLoggerImpl) Fatal(_ context.Context, message logger.Message) {
 	data, err := json.Marshal(message)
 	if err == nil {
@@ -90,9 +109,12 @@ func (i *metricsLoggerImpl) Fatal(_ context.Context, message logger.Message) {
 
 func (i *metricsLoggerImpl) generateMetrics(message logger.Message) {
 	i.m.IncOp(message.OperationName, message.ComponentName, message.EventStatus)
-	i.m.Observe(message.OperationName, message.ComponentName, message.EventStatus, message.Latency)
+	if message.Latency != time.Duration(0) {
+		i.m.Observe(message.OperationName, message.ComponentName, message.EventStatus, message.Latency)
+	}
 }
 
+// Close - close metrics logger
 func (i *metricsLoggerImpl) Close() error {
 	i.m.Close()
 	return i.exec.Close()
