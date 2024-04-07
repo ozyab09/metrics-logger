@@ -5,6 +5,7 @@ import "context"
 type (
 	MessageExecutor interface {
 		ExecuteMessage(level string, text string)
+		Close() error
 	}
 
 	messageExecutorImpl struct {
@@ -49,4 +50,8 @@ func (i *messageExecutorImpl) init() {
 
 func (i *messageExecutorImpl) ExecuteMessage(level string, text string) {
 	i.messages <- logEvent{level: level, text: text}
+}
+
+func (i *messageExecutorImpl) Close() error {
+	return i.logger.Close()
 }

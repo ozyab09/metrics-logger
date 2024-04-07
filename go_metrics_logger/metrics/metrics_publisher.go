@@ -1,10 +1,10 @@
 package metrics
 
 import (
-	"github.com/ozyab09/metrics-logger/go_metrics_logger/logger"
 	"net/http"
 	"time"
 
+	"github.com/ozyab09/metrics-logger/go_metrics_logger/logger"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 

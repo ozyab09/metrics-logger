@@ -7,6 +7,7 @@ import (
 
 type Logger interface {
 	Log(level string, message string)
+	Close() error
 }
 
 type DefaultLogger struct {
@@ -20,5 +21,9 @@ func NewDefaultLogger() Logger {
 func (d *DefaultLogger) Log(level string, message string) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	log.Printf("[%s] %s", level, message)
+	log.Printf("[%s] %s\n", level, message)
+}
+
+func (d *DefaultLogger) Close() error {
+	return nil
 }

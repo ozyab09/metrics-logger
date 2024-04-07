@@ -28,7 +28,7 @@ type (
 		Warn(ctx context.Context, message logger.Message)
 		Error(ctx context.Context, message logger.Message)
 		Fatal(ctx context.Context, message logger.Message)
-		Close()
+		Close() error
 	}
 
 	metricsLoggerImpl struct {
@@ -93,6 +93,7 @@ func (i *metricsLoggerImpl) generateMetrics(message logger.Message) {
 	i.m.Observe(message.OperationName, message.ComponentName, message.EventStatus, message.Latency)
 }
 
-func (i *metricsLoggerImpl) Close() {
+func (i *metricsLoggerImpl) Close() error {
 	i.m.Close()
+	return i.exec.Close()
 }

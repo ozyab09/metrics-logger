@@ -12,7 +12,7 @@ type FileLogger struct {
 }
 
 func NewFileLogger(fileName string) (Logger, error) {
-	file, err := os.Open(fileName)
+	file, err := os.OpenFile(fileName, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
 	if err != nil {
 		return nil, err
 	}
@@ -22,5 +22,12 @@ func NewFileLogger(fileName string) (Logger, error) {
 func (d *FileLogger) Log(level string, message string) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
-	d.f.WriteString(fmt.Sprintf("[%s], %s", level, message))
+	_, err := d.f.WriteString(fmt.Sprintf("[%s], %s\n", level, message))
+	if err != nil {
+		fmt.Println(err)
+	}
+}
+
+func (d *FileLogger) Close() error {
+	return d.f.Close()
 }
