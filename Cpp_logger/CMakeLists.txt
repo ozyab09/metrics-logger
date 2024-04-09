@@ -1,6 +1,10 @@
-cmake_minimum_required(VERSION 3.25)
+cmake_minimum_required(VERSION 3.9)
 project(Cpp_logger)
 
 set(CMAKE_CXX_STANDARD 17)
+find_package(cpprestsdk REQUIRED)
+find_package(OpenSSL REQUIRED)
 
-add_executable(Cpp_logger main.cpp logger_base.cpp logger_base.h concurrentqueue.h messages_executor.hpp log_message.h log_level.h)
+add_executable(Cpp_logger main.cpp logger/logger_base.cpp logger/logger_base.h concurrentqueue.h logger/messages_executor.hpp logger/log_message.h logger/log_level.h metrics/metrics.cpp metrics/metrics.h metrics/gauge.cpp metrics/gauge.h metrics/summary.cpp metrics/summary.h metrics/counter.cpp metrics/counter.h metrics/base_metric.h)
+target_link_libraries(Cpp_logger PRIVATE OpenSSL::SSL OpenSSL::Crypto PRIVATE cpprestsdk::cpprest)
+

@@ -5,7 +5,7 @@
 #include <memory>
 #include <thread>
 
-#include "concurrentqueue.h"
+#include "../concurrentqueue.h"
 
 namespace MetricsLogger {
     class MessagesExecutor {
