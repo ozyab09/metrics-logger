@@ -2,7 +2,6 @@
 
 namespace MetricsManager {
     void MetricsManager::HandleGet(const http_request &request) {
-        std::cout << "ABOBA" << std::endl;
         request.reply(status_codes::OK, SerializeMetrics());
     }
 
@@ -24,7 +23,7 @@ namespace MetricsManager {
 
         Listener = http_listener(
                 "http://localhost:" + std::to_string(Config["port"].as_integer()) + Config["metrics_path"].as_string());
-        std::cout << "http://localhost:" + std::to_string(Config["port"].as_integer()) + Config["metrics_path"].as_string() << std::endl;
+        std::cout << "Metrics is listening on http://localhost:" + std::to_string(Config["port"].as_integer()) + Config["metrics_path"].as_string() << std::endl;
         Listener.support(methods::GET, [this](const http_request &http_req) { this->HandleGet(http_req); });
         Listener.open().wait();
     }
