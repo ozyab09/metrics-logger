@@ -1,5 +1,7 @@
 **Краткий обзор**
 
+Собранный бинарь в java_logger/java_logger.jar
+
 ```
 // Создание логгера
 Logger logger = new Logger();
