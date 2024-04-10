@@ -91,8 +91,15 @@ metricsManager.GetGauge("Aboba")->Set(0); // "Aboba" value = 0
 ```cpp
 MetricsManager::MetricsManager metricsManager("config.json");
 metricsManager.RegisterSummary("Aboba", {0.3, 0.5, 0.95, 0.99}); // "Aboba" summary would calc {0.3, 0.5, 0.95, 0.99} percentiles
+metricsManager.GetSummary("Aboba")->Observe(123);
+metricsManager.GetSummary("Aboba")->Observe(1);
+metricsManager.GetSummary("Aboba")->Observe(5);
 ```
 
+## Sources and additional libraries
 
-
+* [boost](https://github.com/boostorg/boost/)
+* [Concurrentqueue](https://github.com/cameron314/concurrentqueue) - Concurrentqueue
+* [cpprest](https://github.com/microsoft/cpprestsdk) - cpprest
+* [nlohmann::json](https://github.com/nlohmann/json) - json lib
   
