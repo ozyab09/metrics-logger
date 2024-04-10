@@ -1,0 +1,5 @@
+{
+  "port": 8080,
+  "metrics_path": "/metrics",
+  "output_format": "prometheus"
+}
