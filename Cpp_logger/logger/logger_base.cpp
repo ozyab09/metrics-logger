@@ -16,7 +16,7 @@ namespace MetricsLogger {
         LogMessage logMessage;
         logMessage.MainFields["Message"] = message;
         std::time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-        std::string timestamp(30, '\0');
+        std::string timestamp(19, '\0');
         std::strftime(&timestamp[0], timestamp.size(), "%Y-%m-%d %H:%M:%S", std::localtime(&now));
         logMessage.MainFields["Timestamp"] = timestamp;
         logMessage.MainFields["LogLevel"] = LogLevelToString(logLevel);
@@ -71,19 +71,22 @@ namespace MetricsLogger {
         }
     }
 
-    void BaseLogger::LogJson(const LogLevel& logLevel, const std::string& message, const std::map<std::string, std::any>& otherFields) {
+    void BaseLogger::LogJson(const LogLevel& logLevel,
+                             const std::string& message,
+                             const std::map<std::string,
+                             std::any>& otherFields) {
         if (logLevel > Level) {
             Executor.AddMessageSending([=]() {
                 LogMessage logMessage;
                 logMessage.MainFields["Message"] = message;
                 std::time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
-                std::string timestamp(30, '\0');
+                std::string timestamp(19, '\0');
                 std::strftime(&timestamp[0], timestamp.size(), "%Y-%m-%d %H:%M:%S", std::localtime(&now));
                 logMessage.MainFields["Timestamp"] = timestamp;
                 logMessage.MainFields["LogLevel"] = LogLevelToString(logLevel);
                 std::ostringstream ss;
                 ss << std::this_thread::get_id();
-                logMessage.MainFields["TreadId"] = ss.str();
+                logMessage.MainFields["ThreadId"] = ss.str();
 
                 for (const auto& field : otherFields) {
                     if (field.second.type() == typeid(int)) {
@@ -103,18 +106,63 @@ namespace MetricsLogger {
                     }
                 }
 
-                std::cout << logMessage.MainFields << "/n";
+                std::cout << logMessage.MainFields << std::endl;
             });
         }
     }
 
-    void BaseLogger::LogInFile(const LogLevel& logLevel, const std::string& message, const std::string& filePath, const std::map<std::string, std::any>& otherFields) {
+    void BaseLogger::LogJsonInFile(const LogLevel& logLevel,
+                                   const std::string& message,
+                                   const std::string& filePath,
+                                   const std::map<std::string, std::any>& otherFields) {
+        if (logLevel > Level) {
+            Executor.AddMessageSending([=]() {
+                LogMessage logMessage;
+                logMessage.MainFields["Message"] = message;
+                std::time_t now = std::chrono::system_clock::to_time_t(std::chrono::system_clock::now());
+                std::string timestamp(19, '\0');
+                std::strftime(&timestamp[0], timestamp.size(), "%Y-%m-%d %H:%M:%S", std::localtime(&now));
+                logMessage.MainFields["Timestamp"] = timestamp;
+                logMessage.MainFields["LogLevel"] = LogLevelToString(logLevel);
+                std::ostringstream ss;
+                ss << std::this_thread::get_id();
+                logMessage.MainFields["ThreadId"] = ss.str();
+
+                for (const auto& field : otherFields) {
+                    if (field.second.type() == typeid(int)) {
+                        logMessage.MainFields[field.first] = std::any_cast<int>(field.second);
+                    } else if (field.second.type() == typeid(std::string)) {
+                        logMessage.MainFields[field.first] = std::any_cast<std::string>(field.second);
+                    } else if (field.second.type() == typeid(bool)) {
+                        logMessage.MainFields[field.first] = std::any_cast<bool>(field.second);
+                    } else if (field.second.type() == typeid(double)) {
+                        logMessage.MainFields[field.first] = std::any_cast<double>(field.second);
+                    } else if (field.second.type() == typeid(std::vector<int>)) {
+                        logMessage.MainFields[field.first] = std::any_cast<std::vector<int>>(field.second);
+                    } else if (field.second.type() == typeid(std::vector<double>)) {
+                        logMessage.MainFields[field.first] = std::any_cast<std::vector<double>>(field.second);
+                    } else if (field.second.type() == typeid(std::vector<bool>)) {
+                        logMessage.MainFields[field.first] = std::any_cast<std::vector<bool>>(field.second);
+                    }
+                }
+
+                std::ofstream out;
+                out.open(filePath);
+                out << logMessage.MainFields << std::endl;
+                out.close();
+            });
+        }
+    }
+
+    void BaseLogger::LogInFile(const LogLevel& logLevel,
+                               const std::string& message,
+                               const std::string& filePath,
+                               const std::map<std::string, std::any>& otherFields) {
         if (logLevel > Level) {
             Executor.AddMessageSending([=]() {
                 std::ofstream out;
                 out.open(filePath);
                 out << GetDefaultLogString(logLevel, message, otherFields) << std::endl;
-
                 out.close();
             });
         }
