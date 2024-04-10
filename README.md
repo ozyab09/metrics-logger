@@ -155,7 +155,7 @@
 <h4> For C++: </h4>
 
 > ```
-> $ c++ ...
+> $ c++ get https://github.com/ozyab09/metrics-logger/cpp_logger@latest
 > ```
 
 <h4> For Java: </h4>
