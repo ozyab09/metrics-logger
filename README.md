@@ -48,13 +48,24 @@
     │   ├── main.cpp
     │   └── metrics
     ├── README.md
-    └── go_metrics_logger
+    ├── go_metrics_logger
+    │   ├── README.md
+    │   ├── go.mod
+    │   ├── go.sum
+    │   ├── logger
+    │   ├── metrics
+    │   └── metrics_logger.go
+    └── java_logger
+        ├── .gitattributes
+        ├── .gitignore
+        ├── .idea
         ├── README.md
-        ├── go.mod
-        ├── go.sum
-        ├── logger
-        ├── metrics
-        └── metrics_logger.go
+        ├── gradle
+        ├── gradlew
+        ├── gradlew.bat
+        ├── java_logger.jar
+        ├── lib
+        └── settings.gradle
 ```
 
 ---
@@ -98,6 +109,71 @@
 | [summary.cpp](https://github.com/ozyab09/metrics-logger/blob/master/Cpp_logger/metrics/summary.cpp)     | <code>► INSERT-TEXT-HERE</code> |
 | [gauge.cpp](https://github.com/ozyab09/metrics-logger/blob/master/Cpp_logger/metrics/gauge.cpp)         | <code>► INSERT-TEXT-HERE</code> |
 | [base_metric.h](https://github.com/ozyab09/metrics-logger/blob/master/Cpp_logger/metrics/base_metric.h) | <code>► INSERT-TEXT-HERE</code> |
+
+</details>
+
+<details closed><summary>java_logger</summary>
+
+| File                                                                                                 | Summary                         |
+| ---                                                                                                  | ---                             |
+| [gradlew.bat](https://github.com/ozyab09/metrics-logger/blob/master/java_logger/gradlew.bat)         | <code>► INSERT-TEXT-HERE</code> |
+| [settings.gradle](https://github.com/ozyab09/metrics-logger/blob/master/java_logger/settings.gradle) | <code>► INSERT-TEXT-HERE</code> |
+
+</details>
+
+<details closed><summary>java_logger.lib</summary>
+
+| File                                                                                               | Summary                         |
+| ---                                                                                                | ---                             |
+| [build.gradle](https://github.com/ozyab09/metrics-logger/blob/master/java_logger/lib/build.gradle) | <code>► INSERT-TEXT-HERE</code> |
+
+</details>
+
+<details closed><summary>java_logger.lib.src.test.java.hse.serrriy</summary>
+
+| File                                                                                                                                             | Summary                         |
+| ---                                                                                                                                              | ---                             |
+| [MetricsLoggerTest.java](https://github.com/ozyab09/metrics-logger/blob/master/java_logger/lib/src/test/java/hse/serrriy/MetricsLoggerTest.java) | <code>► INSERT-TEXT-HERE</code> |
+
+</details>
+
+<details closed><summary>java_logger.lib.src.main.java.hse.serrriy</summary>
+
+| File                                                                                                                           | Summary                         |
+| ---                                                                                                                            | ---                             |
+| [Reporter.java](https://github.com/ozyab09/metrics-logger/blob/master/java_logger/lib/src/main/java/hse/serrriy/Reporter.java) | <code>► INSERT-TEXT-HERE</code> |
+| [Logger.java](https://github.com/ozyab09/metrics-logger/blob/master/java_logger/lib/src/main/java/hse/serrriy/Logger.java)     | <code>► INSERT-TEXT-HERE</code> |
+| [Config.java](https://github.com/ozyab09/metrics-logger/blob/master/java_logger/lib/src/main/java/hse/serrriy/Config.java)     | <code>► INSERT-TEXT-HERE</code> |
+| [Level.java](https://github.com/ozyab09/metrics-logger/blob/master/java_logger/lib/src/main/java/hse/serrriy/Level.java)       | <code>► INSERT-TEXT-HERE</code> |
+
+</details>
+
+<details closed><summary>java_logger.lib.src.main.java.hse.serrriy.metrics</summary>
+
+| File                                                                                                                                       | Summary                         |
+| ---                                                                                                                                        | ---                             |
+| [Metrics.java](https://github.com/ozyab09/metrics-logger/blob/master/java_logger/lib/src/main/java/hse/serrriy/metrics/Metrics.java)       | <code>► INSERT-TEXT-HERE</code> |
+| [Gauge.java](https://github.com/ozyab09/metrics-logger/blob/master/java_logger/lib/src/main/java/hse/serrriy/metrics/Gauge.java)           | <code>► INSERT-TEXT-HERE</code> |
+| [Summary.java](https://github.com/ozyab09/metrics-logger/blob/master/java_logger/lib/src/main/java/hse/serrriy/metrics/Summary.java)       | <code>► INSERT-TEXT-HERE</code> |
+| [Counter.java](https://github.com/ozyab09/metrics-logger/blob/master/java_logger/lib/src/main/java/hse/serrriy/metrics/Counter.java)       | <code>► INSERT-TEXT-HERE</code> |
+| [RingBuffer.java](https://github.com/ozyab09/metrics-logger/blob/master/java_logger/lib/src/main/java/hse/serrriy/metrics/RingBuffer.java) | <code>► INSERT-TEXT-HERE</code> |
+
+</details>
+
+<details closed><summary>java_logger.gradle</summary>
+
+| File                                                                                                              | Summary                         |
+| ---                                                                                                               | ---                             |
+| [libs.versions.toml](https://github.com/ozyab09/metrics-logger/blob/master/java_logger/gradle/libs.versions.toml) | <code>► INSERT-TEXT-HERE</code> |
+
+</details>
+
+<details closed><summary>.github.workflows</summary>
+
+| File                                                                                                                         | Summary                         |
+| ---                                                                                                                          | ---                             |
+| [go.yml](https://github.com/ozyab09/metrics-logger/blob/master/.github/workflows/go.yml)                                     | <code>► INSERT-TEXT-HERE</code> |
+| [cmake-multi-platform.yml](https://github.com/ozyab09/metrics-logger/blob/master/.github/workflows/cmake-multi-platform.yml) | <code>► INSERT-TEXT-HERE</code> |
 
 </details>
 
@@ -155,13 +231,13 @@
 <h4> For C++: </h4>
 
 > ```
-> $ c++ get https://github.com/ozyab09/metrics-logger/cpp_logger@latest
+> $ C++
 > ```
 
 <h4> For Java: </h4>
 
 > ```
-> $ java ...
+> $ Java ...
 > ```
 
 ###  Usage
