@@ -49,8 +49,8 @@ jobs:
 
     - name: Install cpprestsdk
       run: |
-        sudo apt-get update
-        sudo apt-get install -y libcpprest-dev
+        apt-get update
+        apt-get install -y libcpprest-dev
 
     - name: Set reusable strings
       # Turn repeated input strings (such as the build output directory) into step outputs. These step outputs can be used throughout the workflow file.
