@@ -64,7 +64,7 @@ namespace MetricsLogger {
     }
 
     void BaseLogger::Log(const LogLevel& logLevel, const std::string& message, const std::map<std::string, std::any>& otherFields) {
-        if (logLevel > Level) {
+        if (logLevel >= Level) {
             Executor.AddMessageSending([=]() {
                 std::cout << GetDefaultLogString(logLevel, message, otherFields) << std::endl;
             });
@@ -75,7 +75,7 @@ namespace MetricsLogger {
                              const std::string& message,
                              const std::map<std::string,
                              std::any>& otherFields) {
-        if (logLevel > Level) {
+        if (logLevel >= Level) {
             Executor.AddMessageSending([=]() {
                 LogMessage logMessage;
                 logMessage.MainFields["Message"] = message;
@@ -115,7 +115,7 @@ namespace MetricsLogger {
                                    const std::string& message,
                                    const std::string& filePath,
                                    const std::map<std::string, std::any>& otherFields) {
-        if (logLevel > Level) {
+        if (logLevel >= Level) {
             Executor.AddMessageSending([=]() {
                 LogMessage logMessage;
                 logMessage.MainFields["Message"] = message;
@@ -158,7 +158,7 @@ namespace MetricsLogger {
                                const std::string& message,
                                const std::string& filePath,
                                const std::map<std::string, std::any>& otherFields) {
-        if (logLevel > Level) {
+        if (logLevel >= Level) {
             Executor.AddMessageSending([=]() {
                 std::ofstream out;
                 out.open(filePath);

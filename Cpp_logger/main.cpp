@@ -8,13 +8,17 @@
 
 int main() {
     MetricsLogger::BaseLogger logger;
-    std::any val = std::string("log value");
-    logger.LogInFile(MetricsLogger::LogLevel::ERROR, "Log in console", "file.txt", {{"Optional log", val}});
 
-    MetricsManager::MetricsManager metricsManager("config.json");
-    metricsManager.RegisterSummary("Aboba", {0.3, 0.5, 0.95, 0.99});
-    metricsManager.GetSummary("Aboba")->Observe(123);
-    metricsManager.GetSummary("Aboba")->Observe(1);
-    metricsManager.GetSummary("Aboba")->Observe(5);
+    MetricsManager::MetricsManager metricsManager("/Users/abdullinsaid/CLionProjects/metrics-logger/Cpp_logger/Cpp_logger/config.json");
+    metricsManager.RegisterCounter("CounterExample");
+    metricsManager.RegisterGauge("GaugeExample");
+    metricsManager.RegisterSummary("SummaryExample", {0.3, 0.5, 0.95, 0.99});
+    for (int i = 0; i < 10000; ++i) {
+        metricsManager.GetCounter("CounterExample")->Increment();
+        metricsManager.GetGauge("GaugeExample")->Set(rand() % 100);
+        metricsManager.GetSummary("SummaryExample")->Observe(i);
+        logger.Log(MetricsLogger::LogLevel::WARN, "Metrics has been updated");
+        sleep(1);
+    }
     return 0;
 }
