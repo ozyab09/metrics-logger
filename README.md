@@ -231,7 +231,7 @@
 <h4> For C++: </h4>
 
 > ```
-> $ C++
+> $ C++ curl -LJO https://github.com/ozyab09/metrics-logger/archive/refs/tags/cpp_metrics_logger.zip
 > ```
 
 <h4> For Java: </h4>
