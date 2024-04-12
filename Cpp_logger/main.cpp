@@ -9,7 +9,7 @@
 int main() {
     MetricsLogger::BaseLogger logger;
 
-    MetricsManager::MetricsManager metricsManager("/Users/abdullinsaid/CLionProjects/metrics-logger/Cpp_logger/Cpp_logger/config.json");
+    MetricsManager::MetricsManager metricsManager("config.json");
     metricsManager.RegisterCounter("CounterExample");
     metricsManager.RegisterGauge("GaugeExample");
     metricsManager.RegisterSummary("SummaryExample", {0.3, 0.5, 0.95, 0.99});
