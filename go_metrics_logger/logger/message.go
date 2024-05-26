@@ -13,7 +13,15 @@ const (
 )
 
 // Message - structure of messages that are sent for logging
-type Message struct {
+
+type I_Message interface {
+	GetOperationName() string
+	GetComponentName() string
+	GetEventStatus() Status
+	GetLatency() time.Duration
+}
+
+/*type Message struct {
 	// EventID - id of event
 	EventID int64 `json:"EVENT_ID"`
 	// OperationName - name of logging operation
@@ -33,3 +41,4 @@ type Message struct {
 	// Payload - additional message payload
 	Payload string `json:"Payload"`
 }
+*/

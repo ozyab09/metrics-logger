@@ -42,6 +42,11 @@ func (p *MetricsPublisher) Observe(opName string, componentName string, status l
 	p.m.Observe(opName, componentName, status, d)
 }
 
+// Trigger - counting if message if message have error status
+func (p *MetricsPublisher) Trigger(opName string, componentName string, status logger.Status) {
+	p.m.Trigger(opName, componentName, status)
+}
+
 // Close - close metrics counter
 func (p *MetricsPublisher) Close() {
 	p.m.Close()
