@@ -13,6 +13,8 @@ type Metrics interface {
 	IncOp(opName string, componentName string, status logger.Status)
 	// Observe - calculation of operation execution time
 	Observe(opName string, componentName string, status logger.Status, d time.Duration)
+	// Trigger - counting if message if message have error status
+	Trigger(opName string, componentName string, status logger.Status)
 	// Close - close metrics counter
 	Close()
 }
@@ -20,6 +22,7 @@ type Metrics interface {
 type metricsImpl struct {
 	opCount   *prometheus.CounterVec
 	opLatency *prometheus.HistogramVec
+	opGauge   *prometheus.GaugeVec
 }
 
 // NewMetrics - return new metrics counter implementation
@@ -38,16 +41,23 @@ func NewMetrics() Metrics {
 		},
 		[]string{"op_name", "component_name", "status"},
 	)
-	prometheus.MustRegister(opCount, opLatency)
+	opGauge := prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "service_op_gauge",
+			Help: "Latency of operations",
+		},
+		[]string{"op_name", "component_name", "status"},
+	)
+	prometheus.MustRegister(opCount, opLatency, opGauge)
 
-	return &metricsImpl{opCount: opCount, opLatency: opLatency}
+	return &metricsImpl{opCount: opCount, opLatency: opLatency, opGauge: opGauge}
 }
 
 // IncOp - counting the number of operations
 func (i *metricsImpl) IncOp(opName string, componentName string, status logger.Status) {
-	i.opCount.WithLabelValues(
-		opName, componentName, string(status),
-	).Inc()
+	i.opCount.
+		WithLabelValues(opName, componentName, string(status)).
+		Inc()
 }
 
 // Observe - calculation of operation execution time
@@ -55,6 +65,13 @@ func (i *metricsImpl) Observe(opName string, componentName string, status logger
 	i.opLatency.
 		WithLabelValues(opName, componentName, string(status)).
 		Observe(d.Seconds())
+}
+
+func (i *metricsImpl) Trigger(opName string, componentName string, status logger.Status) {
+	if status == "Error" {
+		i.opGauge.
+			WithLabelValues(opName, componentName, string(status)).Inc()
+	}
 }
 
 // Close - close metrics counter
