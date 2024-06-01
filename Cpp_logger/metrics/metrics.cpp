@@ -41,6 +41,9 @@ namespace MetricsManager {
             for (const auto& it : Summaries) {
                 result += it.second->SerializeInPrometheus();
             }
+            for (const auto& it : Histograms) {
+                result += it.second->SerializeInPrometheus();
+            }
             return result;
         } else if (Config["output_format"].as_string() == "json") {
             web::json::value result;
@@ -55,6 +58,11 @@ namespace MetricsManager {
                 }
             }
             for (const auto& it : Summaries) {
+                for (const auto& field : it.second->SerializeInJson().as_object()) {
+                    result[field.first] = field.second;
+                }
+            }
+            for (const auto& it : Histograms) {
                 for (const auto& field : it.second->SerializeInJson().as_object()) {
                     result[field.first] = field.second;
                 }
@@ -77,6 +85,10 @@ namespace MetricsManager {
         return Summaries[name];
     }
 
+    std::shared_ptr<Histogram> MetricsManager::GetHistogram(const std::string &name) {
+        return Histograms[name];
+    }
+
     void MetricsManager::RegisterCounter(const std::string& label) {
         if (CheckLabel(label)) {
             Counters[label] = std::make_shared<Counter>(label);
@@ -92,6 +104,12 @@ namespace MetricsManager {
     void MetricsManager::RegisterSummary(const std::string& label, const std::vector<double>& percentiles, size_t cacheSize) {
         if (CheckLabel(label)) {
             Summaries[label] = std::make_shared<Summary>(label, percentiles, cacheSize);
+        }
+    }
+
+    void MetricsManager::RegisterHistogram(const std::string& label, const std::vector<double>& buckets) {
+        if (CheckLabel(label)) {
+            Histograms[label] = std::make_shared<Histogram>(label, buckets);
         }
     }
 
