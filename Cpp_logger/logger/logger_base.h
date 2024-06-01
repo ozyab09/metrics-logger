@@ -7,7 +7,7 @@
 namespace MetricsLogger {
     class BaseLogger {
     public:
-        void Log(
+        virtual void Log(
             const LogLevel& logLevel,
             const std::string& message,
             const std::map<std::string, std::any>& otherFields = {}
